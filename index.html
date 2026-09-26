@@ -79,7 +79,7 @@
         nav {
             background: var(--card-bg);
             border-bottom: 1px solid var(--border);
-            padding: 1rem 0;
+            padding: 0.75rem 0;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -88,16 +88,21 @@
         nav ul {
             list-style: none;
             display: flex;
-            gap: 2rem;
+            flex-wrap: wrap;
+            gap: 0.75rem 1.25rem;
             justify-content: center;
+            align-items: center;
+            padding: 0;
         }
         nav a {
             text-decoration: none;
             color: var(--text-light);
             font-weight: 500;
-            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            padding: 0.35rem 0;
             border-bottom: 2px solid transparent;
             transition: all 0.2s;
+            white-space: nowrap;
         }
         nav a:hover, nav a.active {
             color: var(--accent);
@@ -177,10 +182,11 @@
             color: var(--text-light);
             font-size: 0.9rem;
         }
-        @media (max-width: 768px) {
+        @media (max-width: 480px) {
             .header-content { flex-direction: column; text-align: center; }
             .header-text h1 { font-size: 1.5rem; }
-            nav ul { gap: 1rem; font-size: 0.9rem; }
+            nav ul { gap: 0.4rem 0.75rem; }
+            nav a { font-size: 0.8rem; }
         }
         html { scroll-behavior: smooth; }
     </style>
@@ -236,21 +242,21 @@
             <div class="card">
                 <span class="badge badge-rr">Registered Report</span>
                 <div class="title" style="margin-top: 0.75rem;">Can we Disentangle Size from Quality to Better Understand Software Maintenance &amp; Evolution? A Study with 2M Scratch Projects</div>
+                <div class="meta">Registered Report &middot; ICSME 2025 (International Conference on Software Maintenance)</div>
+                <div class="details">
+                    A large-scale empirical study with 2 million Scratch projects to separate the effects of size and quality in software maintenance research.
+                </div>
+                <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5363087" class="doi-link" target="_blank">SSRN: 5363087</a>
+            </div>
+
+            <div class="card">
+                <span class="badge badge-rr">Registered Report</span>
+                <div class="title" style="margin-top: 0.75rem;">Can we Disentangle Size from Quality to Better Understand Software Maintenance &amp; Evolution? A Study with 2M Scratch Projects</div>
                 <div class="meta">Registered Report &middot; ICSME 2026 (International Conference on Software Maintenance)</div>
                 <div class="details">
                     A large-scale empirical study with 2 million Scratch projects to separate the effects of size and quality in software maintenance research.
                 </div>
                 <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6984618" class="doi-link" target="_blank">SSRN: 6984618</a>
-            </div>
-            
-            <div class="card">
-                <span class="badge badge-rr">Registered Report</span>
-                <div class="title" style="margin-top: 0.75rem;">How Do Code Smells Affect Skill Growth in Scratch Novice Programmers?</div>
-                <div class="meta">Registered Report &middot; ICSME 2025 (International Conference on Software Maintenance)</div>
-                <div class="details">
-                    Large-scale study of ~2M Scratch projects establishing the first correlation between computational thinking skillsand design-level code smells. Results link novice programming habits to concrete design flaws, informingcurricula and automated feedback for sustainable software maintenance.
-                </div>
-                <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5363087" class="doi-link" target="_blank">SSRN: 5363087</a>
             </div>
 
             <div class="card">
@@ -264,9 +270,13 @@
             </div>
 
             <div class="card">
-                <span class="badge badge-paper">Conference Paper</span>
+                <span class="badge badge-book">Book Chapter</span>
                 <div class="title" style="margin-top: 0.75rem;">Causality Between Daytime Motor Activity and Sleep Quality</div>
-                <div class="meta">XX Spanish Conference on Artificial Intelligence (AEIA 2024), June 2024</div>
+                <div class="meta">EdArt 2025 &mdash; Book of Abstracts, 978-84-09-62724-0</div>
+                <div class="details">
+                    Investigation of the causal relationship between daytime physical activity and sleep quality outcomes.
+                </div>
+                <a href="https://doi.org/10.37572/EdArt_1909256356" class="doi-link" target="_blank">DOI: 10.37572/EdArt_1909256356</a>
             </div>
 
             <div class="card">
@@ -277,15 +287,10 @@
             </div>
 
             <div class="card">
-                <span class="badge badge-book">Book Chapter</span>
-                <div class="title" style="margin-top: 0.75rem;">Causality Between Daytime Motor Activity and Sleep Quality</div>
-                <div class="meta">EdArt 2025 &mdash; Book of Abstracts, 978-84-09-62724-0</div>
-                <div class="details">
-                    Investigation of the causal relationship between daytime physical activity and sleep quality outcomes.
-                </div>
-                <a href="https://doi.org/10.37572/EdArt_1909256356" class="doi-link" target="_blank">DOI: 10.37572/EdArt_1909256356</a>
+                <span class="badge badge-paper">Conference Paper</span>
+                <div class="title" style="margin-top: 0.75rem;">Voice-based Mood Recognition: An Application to Mental Health</div>
+                <div class="meta">XX Spanish Conference on Artificial Intelligence (AEIA 2024), June 2024</div>
             </div>
-            
         </section>
 
         <section id="awards">
