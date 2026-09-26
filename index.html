@@ -314,12 +314,7 @@
                         <div class="link-label">LinkedIn</div>
                         <div class="link-url">ricardo-hid-ara</div>
                     </div>
-                    <a href="https://www.linkedin.com/in/ricardo-hid-ara/" target="_blank">LinkedIn →</a>
-                </div>
-            </div>
-        </section>
-    </div>
-
+                    <a href="https://www.linkedin.com/in/ricardo-hid-ara/" target="_blank">LinkedIn →</a>        </section>
 
         <section id="presentations">
             <h2>Presentations</h2>
@@ -333,6 +328,8 @@
             </div>
         </section>
 
+    </div>
+
     <footer>
         <div class="container">
             <p>&#169; 2026 Ricardo Hidalgo Aragón</p>
@@ -345,9 +342,9 @@
         </div>
     </footer>
     <script>
-        // Render HTML presentations in an iframe
         async function loadPresentations() {
             const container = document.getElementById('presentations-list');
+            const siteOrigin = window.location.origin;
             try {
                 const response = await fetch('https://api.github.com/repos/rharagon/presentations/git/trees/main?recursive=1');
                 if (!response.ok) throw new Error('Failed to fetch');
@@ -362,14 +359,14 @@
                             const dirName = parts[0];
                             const fileName = parts[1];
                             const ext = fileName.split('.').pop().toLowerCase();
-                                                        const isHtml = ext === 'html';
-                                                        if (!dirs[dirName]) dirs[dirName] = [];
-                                                        dirs[dirName].push({ 
-                                                            fileName,
-                                                            url: isHtml
-                                                                ? `https://rharagon.github.io/render.html?file=${encodeURIComponent(entry.path)}`
-                                                                : `https://raw.githubusercontent.com/rharagon/presentations/main/${entry.path}`
-                                                        });
+                            const isHtml = ext === 'html';
+                            if (!dirs[dirName]) dirs[dirName] = [];
+                            dirs[dirName].push({ 
+                                fileName,
+                                url: isHtml
+                                    ? `${siteOrigin}/render.html?file=${encodeURIComponent(entry.path)}`
+                                    : `https://raw.githubusercontent.com/rharagon/presentations/main/${entry.path}`
+                            });
                         }
                     }
                 });
