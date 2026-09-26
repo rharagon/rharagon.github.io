@@ -340,6 +340,7 @@
         </div>
     </footer>
     <script>
+        // Render HTML presentations in an iframe
         async function loadPresentations() {
             const container = document.getElementById('presentations-list');
             try {
@@ -348,7 +349,6 @@
                 const data = await response.json();
                 const tree = data.tree || [];
                 
-                // Group files by top-level directory
                 const dirs = {};
                 tree.forEach(entry => {
                     if (entry.type === 'blob' && (entry.path.toLowerCase().endsWith('.html') || entry.path.toLowerCase().endsWith('.pdf'))) {
@@ -356,9 +356,11 @@
                         if (parts.length === 2) {
                             const dirName = parts[0];
                             const fileName = parts[1];
-                            const url = `https://raw.githubusercontent.com/rharagon/presentations/main/${entry.path}`;
                             if (!dirs[dirName]) dirs[dirName] = [];
-                            dirs[dirName].push({ fileName, url });
+                            dirs[dirName].push({ 
+                                fileName, 
+                                rawUrl: `https://rharagon.github.io/pages/presentations.html${encodeURIComponent(entry.path)}`
+                            });
                         }
                     }
                 });
@@ -373,9 +375,7 @@
                     html += `<h3 style="color: var(--primary); font-size: 1.05rem; margin-bottom: 0.75rem;">${dirName}</h3>`;
                     html += '<ul style="margin-left: 1.5rem; list-style: none; padding-left: 0;">';
                     files.forEach(f => {
-                        const ext = f.fileName.split('.').pop().toUpperCase();
-                        const linkUrl = ext === 'HTML' ? f.url : f.url;
-                        html += `<li style="padding: 0.4rem 0;"><a href="${linkUrl}" target="_blank" style="color: var(--accent);">📄 ${f.fileName}</a></li>`;
+                        html += `<li style="padding: 0.4rem 0;"><a href="${f.rawUrl}" target="_blank" style="color: var(--accent);">🖥️ ${f.fileName}</a></li>`;
                     });
                     html += '</ul>';
                 }

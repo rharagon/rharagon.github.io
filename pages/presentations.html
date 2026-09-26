@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentations - Ricardo Hidalgo Aragón</title>
+    <style>
+        :root {
+            --primary: #2c5282;
+            --text-light: #4a5568;
+            --bg: #f7fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: #1a202c; line-height: 1.6; }
+        .container { max-width: 700px; margin: 0 auto; padding: 3rem 20px; }
+        h1 { color: var(--primary); margin-bottom: 2rem; font-size: 1.5rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; }
+        h2 { font-size: 1.1rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .card { background: var(--card-bg); border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; border: 1px solid var(--border); }
+        .file-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+        .file-link:last-child { border-bottom: none; }
+        .file-link a { color: var(--primary); text-decoration: none; font-weight: 500; }
+        .file-link a:hover { text-decoration: underline; }
+        .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--primary); text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .loading { color: var(--text-light); font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="https://rharagon.github.io" class="back-link">&larr; Back to home</a>
+        <h1>Presentations</h1>
+        <div id="content">
+            <p class="loading">Loading...</p>
+        </div>
+    </div>
+    <script>
+        async function load() {
+            try {
+                const res = await fetch('https://api.github.com/repos/rharagon/presentations/git/trees/main?recursive=1');
+                const data = await res.json();
+                const tree = data.tree || [];
+                const dirs = {};
+                tree.forEach(entry => {
+                    if (entry.type === 'blob' && (entry.path.toLowerCase().endsWith('.html') || entry.path.toLowerCase().endsWith('.pdf'))) {
+                        const parts = entry.path.split('/');
+                        if (parts.length === 2) {
+                            const dirName = parts[0];
+                            const fileName = parts[1];
+                            if (!dirs[dirName]) dirs[dirName] = [];
+                            dirs[dirName].push({ fileName, path: entry.path });
+                        }
+                    }
+                });
+                let html = '';
+                for (const [dirName, files] of Object.entries(dirs).sort()) {
+                    html += `<h2>${dirName}</h2>`;
+                    files.forEach(f => {
+                        const icon = f.fileName.split('.').pop() === 'pdf' ? '&#128203;' : '&#128187;';
+                        const url = f.fileName.endsWith('.html')
+                            ? `${window.location.origin}/render.html?file=${encodeURIComponent(f.path)}`
+                            : `https://raw.githubusercontent.com/rharagon/presentations/main/${f.path}`;
+                        html += `<div class="file-link"><span>${icon}</span> <a href="${url}" target="_blank">${f.fileName}</a></div>`;
+                    });
+                };
+                document.getElementById('content').innerHTML = html;
+            } catch (err) {
+                document.getElementById('content').innerHTML = '<p style="color:red;">Failed to load presentations. <a href="https://github.com/rharagon/presentations" target="_blank">View on GitHub</a>.</p>';
+            }
+        }
+        load();
+    </script>
+</body>
+</html>

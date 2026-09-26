@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading presentation...</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; width: 100%; overflow: hidden; background: #1a202c; }
+        iframe { width: 100%; height: 100%; border: none; }
+        #error { color: white; padding: 2rem; font-family: sans-serif; display: none; }
+    </style>
+</head>
+<body>
+    <div id="error">
+        <p>Failed to load presentation. <a href="https://github.com/rharagon/presentations" target="_blank">View on GitHub</a></p>
+    </div>
+    <iframe id="viewer" sandbox="allow-scripts allow-same-origin allow-popups allow-modals"></iframe>
+    <script>
+        (async function() {
+            const params = new URLSearchParams(window.location.search);
+            const filePath = params.get('file');
+            if (!filePath) {
+                document.getElementById('error').style.display = 'block';
+                return;
+            }
+            try {
+                const rawUrl = `https://raw.githubusercontent.com/rharagon/presentations/main/${filePath}`;
+                const response = await fetch(rawUrl);
+                if (!response.ok) throw new Error('Not found');
+                let html = await response.text();
+                
+                // Rewrite relative paths to point to the raw GitHub URL's directory
+                const basePath = rawUrl.substring(0, rawUrl.lastIndexOf('/') + 1);
+                html = html.replace(/(src|href|url)=[\"']([^"']*(?:\.css|\.js|\.png|\.jpg|\.jpeg|\.gif|\.svg|\.ico|\.woff|\.woff2|\.ttf|\.eot|[^"']*)[^"']*)[\\"']/gi, (match, attr, val) => {
+                    if (val.startsWith('http://') || val.startsWith('https://') || val.startsWith('data:')) return match;
+                    return `${attr}="https://raw.githubusercontent.com/rharagon/presentations/main/${filePath.split('/')[0]}/${val.replace(/^\.\//,'')}`;
+                });
+                
+                const iframe = document.getElementById('viewer');
+                iframe.srcdoc = html;
+            } catch (err) {
+                console.error(err);
+                document.getElementById('error').style.display = 'block';
+            }
+        })();
+    </script>
+</body>
+</html>
