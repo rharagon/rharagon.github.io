@@ -205,6 +205,7 @@
                 <li><a href="#publications">Publications</a></li>
                 <li><a href="#awards">Awards</a></li>
                 <li><a href="#education">Education</a></li>
+                <li><a href="#presentations">Presentations</a></li>
                 <li><a href="#links">Links</a></li>
             </ul>
         </div>
@@ -314,6 +315,19 @@
         </section>
     </div>
 
+
+        <section id="presentations">
+            <h2>Presentations</h2>
+            <div class="card">
+                <p style="color: var(--text-light); font-size: 0.95rem;">
+                    Download presentations from my <a href="https://github.com/rharagon/presentations" target="_blank">GitHub repository</a>.
+                </p>
+                <div id="presentations-list" style="margin-top: 1rem;">
+                    <p style="color: var(--text-light);">Loading presentations...</p>
+                </div>
+            </div>
+        </section>
+
     <footer>
         <div class="container">
             <p>&#169; 2026 Ricardo Hidalgo Aragón</p>
@@ -325,5 +339,54 @@
             </p>
         </div>
     </footer>
+    <script>
+        async function loadPresentations() {
+            const container = document.getElementById('presentations-list');
+            try {
+                const response = await fetch('https://api.github.com/repos/rharagon/presentations/git/trees/main?recursive=1');
+                if (!response.ok) throw new Error('Failed to fetch');
+                const data = await response.json();
+                const tree = data.tree || [];
+                
+                // Group files by top-level directory
+                const dirs = {};
+                tree.forEach(entry => {
+                    if (entry.type === 'blob' && (entry.path.toLowerCase().endsWith('.html') || entry.path.toLowerCase().endsWith('.pdf'))) {
+                        const parts = entry.path.split('/');
+                        if (parts.length === 2) {
+                            const dirName = parts[0];
+                            const fileName = parts[1];
+                            const url = `https://raw.githubusercontent.com/rharagon/presentations/main/${entry.path}`;
+                            if (!dirs[dirName]) dirs[dirName] = [];
+                            dirs[dirName].push({ fileName, url });
+                        }
+                    }
+                });
+                
+                if (Object.keys(dirs).length === 0) {
+                    container.innerHTML = '<p style="color: var(--text-light);">No presentations found.</p>';
+                    return;
+                }
+                
+                let html = '';
+                for (const [dirName, files] of Object.entries(dirs).sort()) {
+                    html += `<h3 style="color: var(--primary); font-size: 1.05rem; margin-bottom: 0.75rem;">${dirName}</h3>`;
+                    html += '<ul style="margin-left: 1.5rem; list-style: none; padding-left: 0;">';
+                    files.forEach(f => {
+                        const ext = f.fileName.split('.').pop().toUpperCase();
+                        const linkUrl = ext === 'HTML' ? f.url : f.url;
+                        html += `<li style="padding: 0.4rem 0;"><a href="${linkUrl}" target="_blank" style="color: var(--accent);">📄 ${f.fileName}</a></li>`;
+                    });
+                    html += '</ul>';
+                }
+                container.innerHTML = html;
+            } catch (err) {
+                container.innerHTML = '<p style="color: var(--text-light);">Could not load presentations. <a href="https://github.com/rharagon/presentations" target="_blank">View on GitHub</a>.</p>';
+            }
+        }
+        
+        loadPresentations();
+    </script>
+
 </body>
 </html>
