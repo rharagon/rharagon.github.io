@@ -356,11 +356,15 @@
                         if (parts.length === 2) {
                             const dirName = parts[0];
                             const fileName = parts[1];
-                            if (!dirs[dirName]) dirs[dirName] = [];
-                            dirs[dirName].push({ 
-                                fileName, 
-                                rawUrl: `https://rharagon.github.io/pages/presentations.html${encodeURIComponent(entry.path)}`
-                            });
+                            const ext = fileName.split('.').pop().toLowerCase();
+                                                        const isHtml = ext === 'html';
+                                                        if (!dirs[dirName]) dirs[dirName] = [];
+                                                        dirs[dirName].push({ 
+                                                            fileName,
+                                                            url: isHtml
+                                                                ? `https://rharagon.github.io/render.html?file=${encodeURIComponent(entry.path)}`
+                                                                : `https://raw.githubusercontent.com/rharagon/presentations/main/${entry.path}`
+                                                        });
                         }
                     }
                 });
@@ -375,7 +379,7 @@
                     html += `<h3 style="color: var(--primary); font-size: 1.05rem; margin-bottom: 0.75rem;">${dirName}</h3>`;
                     html += '<ul style="margin-left: 1.5rem; list-style: none; padding-left: 0;">';
                     files.forEach(f => {
-                        html += `<li style="padding: 0.4rem 0;"><a href="${f.rawUrl}" target="_blank" style="color: var(--accent);">🖥️ ${f.fileName}</a></li>`;
+                        html += `<li style="padding: 0.4rem 0;"><a href="${f.url}" target="_blank" style="color: var(--accent);">🖥️ ${f.fileName}</a></li>`;
                     });
                     html += '</ul>';
                 }
